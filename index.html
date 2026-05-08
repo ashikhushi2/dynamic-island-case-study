@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Apple's Dynamic Island - A Case Study by Ashita Jain</title>
+    <meta
+      name="description"
+      content="A product design case study on Apple's Dynamic Island - what it is, the design decisions that make it effective, how it works from a user's perspective, and one thing I would improve."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Chivo+Mono:wght@400;500&family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- Top header bar -->
+    <header class="topbar">
+      <div class="topbar__inner">
+        <span class="topbar__left">Product Designer Case Study for Posha</span>
+        <span class="topbar__right">Interaction - Apple's Dynamic Island</span>
+      </div>
+    </header>
+
+    <!-- Hero - full-bleed (sibling of .page so it can span the viewport without fighting the article+TOC grid).
+         Three layers, by Figma frame coords (1512x987):
+           1) ocean bg image, full-bleed
+           2) iPhone built in HTML/CSS so we get true transparency + sharp shadows + an
+              independent layer for a future scroll animation
+           3) text block centered over the composition -->
+    <section class="hero" data-reveal>
+      <img
+        class="hero__bg"
+        src="assets/hero-ocean-bg.png"
+        alt=""
+        aria-hidden="true"
+      />
+
+      <div class="hero__phone" aria-hidden="true">
+        <div class="hero__phone-screen">
+          <img class="hero__phone-wallpaper" src="assets/hero-ocean-bg.png" alt="" />
+          <div class="hero__statusbar">
+            <span class="hero__time">9:41</span>
+            <div class="hero__signals">
+              <!-- 4-bar signal -->
+              <svg class="hero__signal" viewBox="0 0 18 12" fill="currentColor" aria-hidden="true">
+                <rect x="0"  y="8" width="3" height="4"  rx="0.6"/>
+                <rect x="5"  y="5" width="3" height="7"  rx="0.6"/>
+                <rect x="10" y="2" width="3" height="10" rx="0.6"/>
+                <rect x="15" y="0" width="3" height="12" rx="0.6"/>
+              </svg>
+              <!-- battery -->
+              <svg class="hero__battery" viewBox="0 0 28 12" fill="none" aria-hidden="true">
+                <rect x="0.5" y="0.5" width="24" height="11" rx="2.5" stroke="currentColor" stroke-opacity="0.55"/>
+                <rect x="2"   y="2"   width="21" height="8"  rx="1.5" fill="currentColor"/>
+                <rect x="25.5" y="3.5" width="2" height="5" rx="1" fill="currentColor" fill-opacity="0.55"/>
+              </svg>
+            </div>
+          </div>
+          <!-- Sibling of statusbar, NOT a child - so its `top: 5.875cqw` is
+               measured from the phone screen, not from the statusbar. -->
+          <div class="hero__island">
+            <!-- lucide tree-palm -->
+            <svg class="hero__palm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M13 8c0-2.76-2.46-5-5.5-5S2 5.24 2 8h2l1-1 1 1h4"/>
+              <path d="M13 7.14A5.82 5.82 0 0 1 16.5 6c3.04 0 5.5 2.24 5.5 5h-3l-1-1-1 1h-3"/>
+              <path d="M5.89 9.71c-2.15 2.15-2.3 5.47-.35 7.43l4.24-4.25.7-.7.71-.71 2.12-2.12c-1.95-1.96-5.27-1.8-7.42.35z"/>
+              <path d="M11 15.5c.5 2.5-.17 4.5-1 6.5h4c2-5.5-.5-12-1-14"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero__text">
+        <p class="hero__eyebrow">Case Study by Ashita Jain</p>
+        <h1 class="hero__title"><span class="hero__title-line">Apple&rsquo;s</span> <span class="hero__title-line">Dynamic Island</span></h1>
+        <p class="hero__subtitle"><span class="hero__subtitle-line">An exceptionally</span> <span class="hero__subtitle-line">designed UI Interaction</span></p>
+      </div>
+    </section>
+
+    <!-- Page wrapper with main column + sticky TOC -->
+    <div class="page">
+      <main class="article">
+
+
+        <!-- 1. What the interaction is -->
+        <section class="section" id="intro" data-reveal>
+          <h2 class="section__title">What the interaction is and - the context in which it is used</h2>
+
+          <figure class="figure" data-reveal>
+            <div class="media-placeholder media-placeholder--fig-intro">
+              <video src="assets/what-is-the-interaction.mp4" autoplay loop muted playsinline preload="metadata"></video>
+            </div>
+          </figure>
+
+          <div class="prose">
+            <p>
+              The Dynamic Island is the small pill-shaped region at the top of
+              iPhone screens (introduced on iPhone 14 Pro in 2022) that
+              physically surrounds the front camera and Face ID sensors. What
+              looks like a static piece of hardware is actually a software
+              interaction surface that morphs in shape, size, and content
+              depending on the app activities happening on the device.
+            </p>
+            <p>
+              Its context of use is <strong>ambient awareness during multitasking</strong>.
+              It has three discrete states: a compact resting state which
+              shows an activity icon and a small piece of data related to the
+              activity, an expanded state when you long-press it (a richer
+              card with controls), and a tap state that takes you back into
+              the source app. It can also host two activities simultaneously
+              by splitting visually around the camera. On swipe - you can
+              switch to the second latest app activity of your choice or
+              dismiss/retain an activity.
+            </p>
+          </div>
+        </section>
+
+        <!-- 2. Design decisions that make it effective -->
+        <section class="section" id="design" data-reveal>
+          <h2 class="section__title">Design decisions that make it effective</h2>
+
+          <figure class="figure" data-reveal>
+            <div class="media-placeholder media-placeholder--fig-design">
+              <video src="assets/user-perspective.mp4" autoplay loop muted playsinline preload="metadata"></video>
+            </div>
+          </figure>
+
+          <div class="prose">
+            <p>The single design move that makes it remarkable is this:</p>
+          </div>
+
+          <blockquote class="pullquote" data-reveal>
+            &ldquo;Apple turned a hardware constraint into the most distinctive
+            interaction surface on the device.&rdquo;
+          </blockquote>
+
+          <div class="prose">
+            <p>
+              The front-facing camera array is a physical interruption to the
+              screen. In other phones it&rsquo;s either dissolved into a full-width
+              bar, stealing a few mms off the screen, or a notch which takes
+              space away from the top bar. Apple turned this bug into a
+              feature - one that fits so seamlessly into your flow that it
+              changed the way you use apps on an iPhone.
+              <strong>It raised the bar for the entire third-party app ecosystem and enabled them to step up to accommodate this interaction.</strong>
+            </p>
+          </div>
+
+          <ol class="grid">
+            <li class="card" data-reveal>
+              <h3 class="card__title">Physical anchoring to hardware</h3>
+              <p class="card__desc">The Island is always in the same place because the camera is always in the same place. That immutable position becomes a mental landmark.</p>
+              <span class="card__icon" aria-hidden="true">&#x1F6E0;&#xFE0F;</span>
+            </li>
+            <li class="card" data-reveal>
+              <h3 class="card__title">The fluid morphology</h3>
+              <p class="card__desc">The transitions between states aren&rsquo;t simple resize animations - they use a custom spring physics that makes the shape feel like a single liquid object stretching and contracting. When two activities are present, the pill splits around the camera with a physical-feeling separation rather than a hard cut. Any stutter would break the metaphor, so the transitions are tuned to stay smooth across every state change.</p>
+              <span class="card__icon" aria-hidden="true">&#x1F3A8;</span>
+            </li>
+            <li class="card" data-reveal>
+              <h3 class="card__title">Information hierarchy across states</h3>
+              <p class="card__desc">The compact state shows only an icon and one tiny piece of data (a timer&rsquo;s remaining seconds, a music waveform, a recording dot). The expanded state shows a fuller card with controls. You get just enough to be aware, and the rest is one gesture away.</p>
+              <span class="card__icon" aria-hidden="true">&#x1F516;</span>
+            </li>
+            <li class="card" data-reveal>
+              <h3 class="card__title">System-wide API for third parties (Live Activities and ActivityKit)</h3>
+              <p class="card__desc">The decision to require a structured API (rather than letting apps draw whatever they want) means quality stays high. Apps fill predefined templates, so nothing in the Island ever looks broken or off-brand. It&rsquo;s also what makes the resilience point above possible: because the Live Activity is a system-managed surface and not a window into the app&rsquo;s runtime, it can outlive crashes.</p>
+              <span class="card__icon" aria-hidden="true">&#x1F4F1;</span>
+            </li>
+          </ol>
+
+          <p class="prose--centered" data-reveal>
+            So Apple made this top bar more than just a notification space -
+            it became a place where small, focused control UIs live. It
+            occupies space you weren&rsquo;t using anyway, due to the camera
+            placement. The first time you see your timer slide out of an app
+            and into the Island as you swipe up, the metaphor lands
+            instantly. The activity is living somewhere persistent,
+            and that somewhere is the same place every time. It&rsquo;s exceptional
+            in every way - through design, engineering, and understanding
+            and building trust with users.
+          </p>
+        </section>
+
+        <!-- 3. How it works from a user's perspective -->
+        <section class="section" id="how-it-works" data-reveal>
+          <h2 class="section__title">How it works from a user&rsquo;s perspective</h2>
+
+          <div class="prose">
+            <p>
+              The problem it solves is the
+              <strong>background activity tax</strong>. Every modern phone OS
+              has the same challenge: you start something (timer, music,
+              navigation, a call), switch apps, and now you&rsquo;re cognitively
+              responsible for remembering that thing is still happening.
+            </p>
+
+            <p class="pullquote">
+              You may close the app - but you will not lose context of the
+              activity you opened the app for!
+            </p>
+
+            <p>
+              The Dynamic Island solves this by giving every background
+              activity a persistent, peripheral home that you can ignore when
+              you don&rsquo;t need it and engage with the moment you do. The
+              intuitive part is that the activity <em>follows you</em>.
+              Wherever you go in the OS, your timer is there, your call is
+              there, your boarding pass updates are there. You don&rsquo;t have to
+              navigate back to find it; it&rsquo;s already at the edge of your
+              attention.
+            </p>
+
+            <p class="section__lede--inline">
+              Some of the apps we use most have meaningfully changed their
+              interaction model around the Island - and the design decisions
+              beneath the surface are why any of it works.
+            </p>
+          </div>
+
+          <ol class="user-grid">
+            <li class="user-card" data-reveal>
+              <div class="user-card__media">
+                <div class="media-placeholder media-placeholder--video">
+                  <video src="assets/apple-sports.mp4" autoplay loop muted playsinline preload="metadata"></video>
+                </div>
+              </div>
+              <div class="user-card__body">
+                <h3 class="user-card__title">Live scores, no app switch</h3>
+                <p class="user-card__desc">Apple Sports shows live scores in real time, so you never reopen it during a match - even when you're inside other apps.</p>
+              </div>
+            </li>
+
+            <li class="user-card" data-reveal>
+              <div class="user-card__media">
+                <div class="media-placeholder media-placeholder--video">
+                  <video src="assets/translate.mp4" autoplay loop muted playsinline preload="metadata"></video>
+                </div>
+              </div>
+              <div class="user-card__body">
+                <h3 class="user-card__title">Translate, anywhere</h3>
+                <p class="user-card__desc">Translate keeps a live conversation surface available across any app you switch into. Live dictation, directly from the Island.</p>
+              </div>
+            </li>
+
+            <li class="user-card" data-reveal>
+              <div class="user-card__media">
+                <div class="media-placeholder media-placeholder--video">
+                  <video src="assets/flashlight.mp4" autoplay loop muted playsinline preload="metadata"></video>
+                </div>
+              </div>
+              <div class="user-card__body">
+                <h3 class="user-card__title">A cone of light, literally</h3>
+                <p class="user-card__desc">Flashlight expands the pill into a control that physically resembles a cone of light - adjusting <em>beam width and brightness</em> in a way nothing else on iOS can.</p>
+              </div>
+            </li>
+
+            <li class="user-card" data-reveal>
+              <div class="user-card__media">
+                <div class="media-placeholder media-placeholder--video">
+                  <video src="assets/chatgpt.mp4" autoplay loop muted playsinline preload="metadata"></video>
+                </div>
+              </div>
+              <div class="user-card__body">
+                <h3 class="user-card__title">ChatGPT keeps listening</h3>
+                <p class="user-card__desc">Voice mode keeps its listening state alive in the Island when you switch apps - like multiple tabs on a laptop, you can look things up while you're talking.</p>
+              </div>
+            </li>
+          </ol>
+
+          <aside class="callout" data-reveal>
+            <div class="callout__head">
+              <!-- lucide lightbulb-05 -->
+              <svg class="callout__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 2v1"/>
+                <path d="M5.6 5.6l.7.7"/>
+                <path d="M2 12h1"/>
+                <path d="M18.4 5.6l-.7.7"/>
+                <path d="M21 12h1"/>
+                <path d="M9 18h6"/>
+                <path d="M10 21h4"/>
+                <path d="M14.5 18a4 4 0 1 0 -5 0"/>
+              </svg>
+              <p class="callout__label">A subtle design marvel</p>
+            </div>
+            <p>
+              If the source app crashes or is force-quit, the activity in the
+              Island persists and remains available to view. Live Activities
+              run as a separate system surface rather than as a window into
+              the app&rsquo;s process, so the data you were watching doesn&rsquo;t
+              disappear when the app does. It&rsquo;s extremely reliable for live
+              tracking activities.
+            </p>
+          </aside>
+        </section>
+
+        <!-- 4. One thing I would improve -->
+        <section class="section section--improve" id="improve" data-reveal>
+          <h2 class="section__title">One thing I&rsquo;d improve</h2>
+
+          <p class="prose">
+            An important trade-off worth noting is that Apple has capped
+            Live Activities at two simultaneous instances. When two
+            activities are open, the pill splits into two parts - a
+            pill-shaped region on the left of the camera and a circular
+            bubble on the right. You can swipe to switch which is primary
+            and which is secondary or swipe to dismiss it.
+          </p>
+
+          <!-- Problem -->
+          <div class="subsection" data-reveal>
+            <p class="pill pill--problem">Problem</p>
+            <div class="problem-block">
+              <div class="problem-list">
+                <article class="problem" data-reveal>
+                  <div class="problem__media">
+                    <div class="media-placeholder">
+                      <video src="assets/problem-swipe.mp4" autoplay loop muted playsinline preload="metadata"></video>
+                    </div>
+                  </div>
+                  <p class="problem__caption">
+                    Swipe currently carries multiple meanings - swipe to dismiss an activity, bring it back, or switch primary and secondary causing accidental triggers.
+                  </p>
+                </article>
+
+                <article class="problem" data-reveal>
+                  <div class="problem__media">
+                    <div class="media-placeholder">
+                      <video src="assets/problem-second-bubble.mp4" autoplay loop muted playsinline preload="metadata"></video>
+                    </div>
+                  </div>
+                  <p class="problem__caption">
+                    The smaller right-side bubble is hard to hit accurately. It sits close to the camera cutout and the tap target doesn&rsquo;t have generous padding.
+                  </p>
+                </article>
+              </div>
+            </div>
+          </div>
+
+          <!-- Improvement -->
+          <div class="subsection subsection--improvement" data-reveal>
+            <p class="pill pill--improvement">Improvement</p>
+
+            <p class="prose">
+              The Dynamic Island was built on the foundation of reducing
+              cognitive load and practicing restraint in how much
+              information is shown at once. Two simultaneous Live
+              Activities arguably goes against that principle.
+            </p>
+
+            <div class="improvement-mockups" id="improvement-mockup">
+              <!-- 1) Compact pill + queue badge -->
+              <article class="improvement-mockup">
+                <div class="mockup-panel mockup-panel--compact">
+                  <div class="mockup-panel__phone">
+                    <img class="mockup-panel__phone-img" src="assets/iphone.png" alt="iPhone, compact Dynamic Island" />
+                    <div class="island-compact-row">
+                      <div class="island island--compact" data-current="music">
+                        <div class="island-state is-active" data-state="music">
+                          <img src="assets/island-music-compact.png" alt="Music compact" />
+                        </div>
+                        <div class="island-state" data-state="maps">
+                          <img src="assets/island-maps-compact.png" alt="Maps compact" />
+                        </div>
+                        <div class="island-state" data-state="call">
+                          <img src="assets/island-call-compact.png" alt="Call compact" />
+                        </div>
+                      </div>
+                      <div class="queue-badge" aria-label="3 live activities">+2</div>
+                    </div>
+                    <div class="touch-circle touch-circle--compact" aria-hidden="true"></div>
+                  </div>
+                </div>
+              </article>
+
+              <!-- 2) Expanded card + dot indicator + minus button -->
+              <article class="improvement-mockup">
+                <div class="mockup-panel mockup-panel--expanded">
+                  <div class="mockup-panel__phone">
+                    <img class="mockup-panel__phone-img" src="assets/iphone.png" alt="iPhone, expanded Dynamic Island" />
+                    <div class="island island--expanded" data-current="music">
+                      <div class="island-card is-active" data-state="music">
+                        <img src="assets/island-music-expanded.png" alt="Music expanded" />
+                      </div>
+                      <div class="island-card" data-state="maps">
+                        <img src="assets/island-maps-expanded.png" alt="Maps expanded" />
+                      </div>
+                      <div class="island-card" data-state="call">
+                        <img src="assets/island-call-expanded.png" alt="Call expanded" />
+                      </div>
+                      <div class="card-dots" aria-hidden="true">
+                        <span data-dot="music"></span>
+                        <span data-dot="maps"></span>
+                        <span data-dot="call"></span>
+                      </div>
+                    </div>
+                    <button class="card-delete" aria-label="Dismiss activity">
+                      <svg viewBox="0 0 24 24"><path fill="currentColor" d="M5 11h14v2H5z"/></svg>
+                    </button>
+                    <div class="touch-circle touch-circle--expanded" aria-hidden="true"></div>
+                  </div>
+                </div>
+              </article>
+
+            </div>
+
+            <div class="improvement-captions">
+              <p>Queueing activities one after another instead of splitting the pill. Right and left swipe to switch.</p>
+              <p>Same swipe interaction on expanded card - A small queue indicator (&ldquo;&bull;&bull; +1,&rdquo;)</p>
+            </div>
+
+            <p class="improvement-sidenote">
+              Dismissal - being a destructive action - should be nested inside the expanded card as a &ldquo;&minus;&rdquo; or &ldquo;&times;&rdquo;.
+            </p>
+          </div>
+
+          <!-- Trade-off -->
+          <div class="subsection subsection--tradeoff" data-reveal>
+            <p class="pill pill--tradeoff">Trade-off</p>
+            <div class="tradeoff">
+              <p>
+                Activities would still need to be capped, because there&rsquo;s a
+                real ceiling on how many concurrent ongoing activities a
+                person can mentally track before the Island becomes noise.
+                That&rsquo;s a meaningful trade-off to keep, but it&rsquo;s a
+                cognitive ceiling rather than a visual one.
+              </p>
+            </div>
+          </div>
+
+          <!-- Conclusion -->
+          <div class="subsection subsection--conclusion" data-reveal>
+            <p class="pill pill--conclusion">Conclusion</p>
+            <div class="conclusion">
+              <div class="prose">
+                <p>
+                  This change removes the split pill entirely - eliminating
+                  the accidental taps, the overloaded swipe gesture, and the
+                  pixel-perfect tap required to reach the smaller activity -
+                  while reducing the cognitive load of tracking multiple
+                  things at once.
+                </p>
+                <p>
+                  This isn&rsquo;t a future-proofing change; it&rsquo;s a correction to
+                  a tradeoff that&rsquo;s already showing restraint as Live
+                  Activities proliferate, and the queue-plus-cycle model is
+                  the cleanest way to fix it without abandoning what already
+                  works.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <footer class="article__footer" data-reveal>
+          <p>Case study by <strong>Ashita Jain</strong> · For Posha · 2026</p>
+        </footer>
+      </main>
+
+      <!-- Sticky right sidebar TOC -->
+      <aside class="toc" aria-label="Contents">
+        <div class="toc__inner">
+          <p class="toc__label">Contents</p>
+          <ol class="toc__list">
+            <span class="toc__indicator" aria-hidden="true"></span>
+            <li><a href="#intro" data-toc>What the interaction is and the context in which it is used</a></li>
+            <li><a href="#design" data-toc>Design decisions that make it effective</a></li>
+            <li><a href="#how-it-works" data-toc>How it works from a user's perspective</a></li>
+            <li><a href="#improve" data-toc>One thing I would improve</a></li>
+          </ol>
+        </div>
+      </aside>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
